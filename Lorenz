@@ -1,0 +1,37 @@
+import numpy as np
+from scipy.integrate import solve_ivp
+import matplotlib.pyplot as plt
+
+def simular_lorenz(t, estado, sigma=10.0, rho=28.0, beta=8/3):
+    x, y, z = estado
+    dxdt = sigma * (y - x)
+    dydt = x * (rho - z) - y
+    dzdt = x * y - beta * z
+    return [dxdt, dydt, dzdt]
+
+tempo_de_simulacao = (0, 40)
+
+
+#gera 5000 pontos de tempo entre 0 e 40 onde 0 e 40 é o espaço entre os pontos de tempo
+matriz_de_pontos_de_tempos = np.linspace(tempo_de_simulacao[0], tempo_de_simulacao[1], 5000)
+
+
+#basicamente x,y e z 
+estado_inicial = [1.0, 1.0, 1.0]
+
+
+solucao = solve_ivp(simular_lorenz, tempo_de_simulacao, estado_inicial, t_eval=matriz_de_pontos_de_tempos, method='RK45')
+
+x,y ,z = solucao.y
+
+fig = plt.figure(figsize=(10, 7))
+ax = fig.add_subplot(projection='3d')
+
+ax.plot(x, y, z, color='purple', lw=0.7)
+ax.set_title('Atrator de Lorenz')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+plt.show()
+
+
